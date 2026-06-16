@@ -36,15 +36,50 @@ class DatabaseHelper {
     ''');
   }
 
+  // CREATE
   Future<int> insertStudent(Student student) async {
     final db = await instance.database;
     return await db.insert('students', student.toMap());
   }
 
+  // READ
   Future<List<Student>> getStudents() async {
     final db = await instance.database;
     final result = await db.query('students');
+    return result.map((e) => Student.fromMap(e)).toList();
+  }
 
-    return result.map((json) => Student.fromMap(json)).toList();
+  // UPDATE
+  Future<int> updateStudent(Student student) async {
+    final db = await instance.database;
+    return await db.update(
+      'students',
+      student.toMap(),
+      where: 'id = ?',
+      whereArgs: [student.id],
+    );
+  }
+
+  // DELETE
+  Future<int> deleteStudent(int id) async {
+    final db = await instance.database;
+    return await db.delete(
+      'students',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // SEARCH
+  Future<List<Student>> searchStudents(String keyword) async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'students',
+      where: 'name LIKE ? OR regNo LIKE ?',
+      whereArgs: ['%$keyword%', '%$keyword%'],
+    );
+
+    return result.map((e) => Student.fromMap(e)).toList();
   }
 }

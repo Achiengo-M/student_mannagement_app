@@ -5,6 +5,7 @@ import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/add_student_screen.dart';
 import 'screens/view_student_screen.dart';
+import 'screens/search_student_screen.dart';
 
 void main() {
   runApp(const My_App());
@@ -18,15 +19,19 @@ class My_App extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      // 🚀 FIRST SCREEN
+      // ⭐ APP TITLE (this is what the system sees)
+      title: "Student Management App",
+
+      // FIRST SCREEN
       home: SplashScreen(),
 
-      // 🔁 ROUTES
+      // ROUTES
       routes: {
-        '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
-        '/add': (context) => AddStudentScreen(),
-        '/view': (context) => ViewStudentScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/add': (context) => const AddStudentScreen(),
+        '/view': (context) => const ViewStudentScreen(),
+        '/search': (context) => const SearchStudentScreen(),
       },
     );
   }

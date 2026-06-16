@@ -12,59 +12,155 @@ class AddStudentScreen extends StatefulWidget {
 class _AddStudentScreenState extends State<AddStudentScreen> {
   final nameController = TextEditingController();
   final courseController = TextEditingController();
-  final regController = TextEditingController();
+  final regNoController = TextEditingController();
 
-  void saveStudent() async {
-    if (nameController.text.isEmpty ||
-        courseController.text.isEmpty ||
-        regController.text.isEmpty) return;
+  Future<void> saveStudent() async {
+    try {
+      if (nameController.text.isEmpty ||
+          courseController.text.isEmpty ||
+          regNoController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please fill all fields")),
+        );
+        return;
+      }
 
-    Student student = Student(
-      name: nameController.text,
-      course: courseController.text,
-      regNo: regController.text,
-    );
+      final student = Student(
+        name: nameController.text,
+        course: courseController.text,
+        regNo: regNoController.text,
+      );
 
-    await DatabaseHelper.instance.insertStudent(student);
+      final result =
+          await DatabaseHelper.instance.insertStudent(student);
 
-    nameController.clear();
-    courseController.clear();
-    regController.clear();
+      if (result > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Student saved successfully"),
+            backgroundColor: Colors.green,
+          ),
+        );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Student saved")),
-    );
+        nameController.clear();
+        courseController.clear();
+        regNoController.clear();
+
+        Navigator.pop(context, true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Failed to save student"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Student")),
-
-      body: Padding(
+      appBar: AppBar(
+        title: const Text("Add Student"),
+        backgroundColor: const Color(0xFF6A0DAD),
+      ),
+      body: Container(
+        color: const Color(0xFFF6F2FF),
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: "Name"),
+        child: Center(
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-            TextField(
-              controller: courseController,
-              decoration: const InputDecoration(labelText: "Course"),
-            ),
-            TextField(
-              controller: regController,
-              decoration: const InputDecoration(labelText: "Reg No"),
-            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
 
-            const SizedBox(height: 20),
+                  const Text(
+                    "Add New Student",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF6A0DAD),
+                    ),
+                  ),
 
-            ElevatedButton(
-              onPressed: saveStudent,
-              child: const Text("Save"),
+                  const SizedBox(height: 20),
+
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: "Full Name",
+                      prefixIcon: const Icon(Icons.person),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  TextField(
+                    controller: courseController,
+                    decoration: InputDecoration(
+                      labelText: "Course",
+                      prefixIcon: const Icon(Icons.book),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  TextField(
+                    controller: regNoController,
+                    decoration: InputDecoration(
+                      labelText: "Registration Number",
+                      prefixIcon: const Icon(Icons.numbers),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: saveStudent,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF6A0DAD),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "SAVE STUDENT",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );

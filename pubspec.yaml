@@ -10,3 +10,4 @@ dependencies:
 
   sqflite: any
   path: any
+  http: ^1.2.0
