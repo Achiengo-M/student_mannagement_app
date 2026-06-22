@@ -38,6 +38,21 @@ class HomeScreen extends StatelessWidget {
               '/search',
             ),
 
+            // ✅ NEW FEATURE: Attendance
+            _buildCard(
+              context,
+              "Mark Attendance",
+              Icons.check_circle,
+              '/attendance',
+            ),
+
+            _buildCard(
+              context,
+              "Attendance Report",
+              Icons.bar_chart,
+              '/report',
+            ),
+
             _buildApiCard(context),
 
           ],
@@ -62,9 +77,7 @@ class HomeScreen extends StatelessWidget {
         leading: Icon(icon, color: const Color(0xFF6A0DAD)),
         title: Text(
           title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         trailing: const Icon(Icons.arrow_forward_ios),
         onTap: () {

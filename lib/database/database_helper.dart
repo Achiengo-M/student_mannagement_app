@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
 import '../models/student.dart';
+import '../models/attendance.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -20,36 +22,50 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
     );
   }
 
+  // ---------------- CREATE TABLES ----------------
   Future _createDB(Database db, int version) async {
+
+    // STUDENTS TABLE
     await db.execute('''
       CREATE TABLE students(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         course TEXT,
-        regNo TEXT
+        regNo TEXT,
+        yearOfStudy INTEGER,
+        phoneNumber TEXT
+      )
+    ''');
+
+    // ATTENDANCE TABLE
+    await db.execute('''
+      CREATE TABLE attendance(
+        attendanceId INTEGER PRIMARY KEY AUTOINCREMENT,
+        studentId INTEGER,
+        date TEXT,
+        status TEXT
       )
     ''');
   }
 
-  // CREATE
+  // ---------------- STUDENT METHODS ----------------
+
   Future<int> insertStudent(Student student) async {
     final db = await instance.database;
     return await db.insert('students', student.toMap());
   }
 
-  // READ
   Future<List<Student>> getStudents() async {
     final db = await instance.database;
     final result = await db.query('students');
     return result.map((e) => Student.fromMap(e)).toList();
   }
 
-  // UPDATE
   Future<int> updateStudent(Student student) async {
     final db = await instance.database;
     return await db.update(
@@ -60,7 +76,6 @@ class DatabaseHelper {
     );
   }
 
-  // DELETE
   Future<int> deleteStudent(int id) async {
     final db = await instance.database;
     return await db.delete(
@@ -70,7 +85,6 @@ class DatabaseHelper {
     );
   }
 
-  // SEARCH
   Future<List<Student>> searchStudents(String keyword) async {
     final db = await instance.database;
 
@@ -81,5 +95,37 @@ class DatabaseHelper {
     );
 
     return result.map((e) => Student.fromMap(e)).toList();
+  }
+
+  // ---------------- ATTENDANCE METHODS ----------------
+
+  Future<int> insertAttendance(Attendance attendance) async {
+    final db = await instance.database;
+    return await db.insert('attendance', attendance.toMap());
+  }
+
+  Future<List<Attendance>> getAttendance() async {
+    final db = await instance.database;
+    final result = await db.query('attendance');
+    return result.map((e) => Attendance.fromMap(e)).toList();
+  }
+
+  // ---------------- JOIN QUERY (REPORT) ----------------
+
+  Future<List<Map<String, dynamic>>> getAttendanceWithStudent() async {
+    final db = await instance.database;
+
+    return await db.rawQuery('''
+      SELECT 
+        attendance.attendanceId,
+        attendance.date,
+        attendance.status,
+        students.name,
+        students.regNo
+      FROM attendance
+      INNER JOIN students
+      ON students.id = attendance.studentId
+      ORDER BY attendance.attendanceId DESC
+    ''');
   }
 }
