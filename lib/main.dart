@@ -7,10 +7,11 @@ import 'screens/add_student_screen.dart';
 import 'screens/view_student_screen.dart';
 import 'screens/search_student_screen.dart';
 import 'screens/api_users_screen.dart';
-
-// (ADD THESE LATER WHEN YOU CREATE THEM)
 import 'screens/attendance_screen.dart';
 import 'screens/attendance_report_screen.dart';
+
+// ✅ Week 8
+import 'screens/event_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,12 +39,15 @@ class MyApp extends StatelessWidget {
         '/view': (context) => const ViewStudentScreen(),
         '/search': (context) => const SearchStudentScreen(),
 
-        // API USERS SCREEN
+        // API USERS
         '/api': (context) => const ApiUsersScreen(),
 
-        // ATTENDANCE (you will build next)
+        // ATTENDANCE
         '/attendance': (context) => const AttendanceScreen(),
         '/report': (context) => const AttendanceReportScreen(),
+
+        // ✅ WEEK 8 - EVENT HANDLING
+        '/event': (context) => const EventScreen(),
       },
     );
   }

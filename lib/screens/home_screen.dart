@@ -38,7 +38,6 @@ class HomeScreen extends StatelessWidget {
               '/search',
             ),
 
-            // ✅ NEW FEATURE: Attendance
             _buildCard(
               context,
               "Mark Attendance",
@@ -53,6 +52,14 @@ class HomeScreen extends StatelessWidget {
               '/report',
             ),
 
+            // ✅ NEW WEEK 8 FEATURE
+            _buildCard(
+              context,
+              "Event Handling",
+              Icons.touch_app,
+              '/event',
+            ),
+
             _buildApiCard(context),
 
           ],
@@ -62,11 +69,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCard(
-      BuildContext context,
-      String title,
-      IconData icon,
-      String route,
-      ) {
+    BuildContext context,
+    String title,
+    IconData icon,
+    String route,
+  ) {
     return Card(
       elevation: 6,
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -74,10 +81,15 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF6A0DAD)),
+        leading: Icon(
+          icon,
+          color: const Color(0xFF6A0DAD),
+        ),
         title: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         trailing: const Icon(Icons.arrow_forward_ios),
         onTap: () {
@@ -95,10 +107,15 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
       ),
       child: ListTile(
-        leading: const Icon(Icons.cloud, color: Color(0xFF6A0DAD)),
+        leading: const Icon(
+          Icons.cloud,
+          color: Color(0xFF6A0DAD),
+        ),
         title: const Text(
           "API Users",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         trailing: const Icon(Icons.arrow_forward_ios),
         onTap: () {
